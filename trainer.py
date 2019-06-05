@@ -50,7 +50,7 @@ class Trainer(object):
         if is_train:
             loss.backward()
             self._optimizer.step()
-        loss = loss.data[0]
+        loss = loss.item()
         correct = self.correct(output, target)
         return loss, correct
 
@@ -73,6 +73,8 @@ class Trainer(object):
                 print(f"epochs: {ep}")
                 self.train(train_data)
                 self.test(test_data)
+                for name, module in self.model.named_modules():
+                    if hasattr(module, "mask"): self._logger.add_histogram(name + ".mask", module.mask, self._epochs, bins="sqrt")
         except KeyboardInterrupt:
             print("\ninterrupted")
         finally:
@@ -80,9 +82,10 @@ class Trainer(object):
 
     @staticmethod
     def correct(input, target):
-        return (input.max(dim=1)[1] == target).sum().data[0]
+        return (input.max(dim=1)[1] == target).sum().item()
 
     def variable(self, t, **kwargs):
         if self._cuda_available and self._use_cuda:
             t = t.cuda()
-        return Variable(t, **kwargs)
+        # return Variable(t, **kwargs)
+        return t

@@ -46,7 +46,6 @@ class _L0Norm(nn.Module):
             penalty = 0
         return hard_sigmoid(s), penalty
 
-
 class L0Linear(_L0Norm):
     def __init__(self, in_features, out_features, bias=True, **kwargs):
         super(L0Linear, self).__init__(nn.Linear(in_features, out_features, bias=bias), **kwargs)
@@ -54,7 +53,6 @@ class L0Linear(_L0Norm):
     def forward(self, input):
         mask, penalty = self._get_mask()
         return F.linear(input, self._origin.weight * mask, self._origin.bias), penalty
-
 
 class L0Conv2d(_L0Norm):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, bias=True,

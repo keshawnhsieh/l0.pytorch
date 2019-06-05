@@ -4,7 +4,7 @@ An implementation of **Learning Sparse Neural Networks through $L_0$ Regularizat
 
 ## Contents
 
-* [LeNet5 with MNIST w/ and w/o L0 norm](mnist.py)
+* [LeNet5 with MNIST w/ and w/o L0 norm](train.py)
     + `python mnist.py [--baseline]`. `--baseline` is for without L0 norm (original LeNet5).
     + LeNet5 with L0 regularization achieves 0.9% validation error as mentioned in the paper.
 
@@ -35,3 +35,21 @@ Not yet strictly measure how sparse the L0 regularized model is, but show histog
 - [ ] Regularization for biases (currently only weights are regularized).
 - [ ] More complex architectures with L0 Norm.
 
+## Additional
+baseline vgg16 with cifar10
+```
+python train.py --data cifar10 --baseline
+```
+train l0 vgg16
+```
+python train.py --data cifar10
+```
+prune l0 vgg16 (pass --rand if want randomly select structure)
+```
+python prune.py --pt pt/l0VGG16.pt --rate 70 [--rand]
+```
+finetune (pass --reinitialize if want reinitialize weights)
+```
+python finetune.py --pt pt/l0VGG16_p70.pt [--reinitialize]
+```
+you may want to extend training epochs by passing --epochs 2000
